@@ -62,9 +62,23 @@ def create_product():
     # Crear un nuevo producto con un ID único
     product_data['id'] = str(uuid.uuid4())
 
+
+    # TODO: FIXEAR ESTO
     try:
+        # Obtener el máximo ProductID actual
+        query = "SELECT MAX(ProductID) FROM c"
+        max_id = container.query_items(query, enable_cross_partition_query=True)
+        print(max_id)
+        #max_id = max_id_result[0] if max_id_result[0] is not None else 0
+        #print(max_id)
+        
+        # Asignar el siguiente ProductID
+        new_product_id = str(int(max_id) + 1)
+        product_data['ProductID'] = new_product_id
+        product_data['id'] = str(new_product_id)  # Usar ProductID como id de CosmosDB
+        
         container.create_item(body=product_data)
-        return jsonify({"message": "Producto creado exitosamente.", "product_id": product_data['ProductID']}), 201
+        return jsonify({"message": "Producto creado correctamente.", "product": product_data}), 201
     
     except exceptions.CosmosHttpResponseError as e:
         return jsonify({"Error": str(e)}), 500
