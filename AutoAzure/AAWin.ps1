@@ -94,7 +94,7 @@ database = client.get_database_client('$cosmosDBDatabase')
 container = database.get_container_client('Products')
 
 # Leer y insertar datos
-with open('data/products.json', 'r') as file:
+with open('../data/products.json', 'r') as file:
     products = json.load(file)
     for product in products:
         container.upsert_item(product)
